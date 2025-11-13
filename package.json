@@ -1,0 +1,21 @@
+{
+  "name": "sec4",
+  "version": "1.0.0",
+  "description": "This is my first full stack website",
+  "license": "ISC",
+  "author": "Luke Heaton",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "knex": "^3.1.0",
+    "multer": "^1.4.5-lts.2",
+    "pg": "^8.16.3"
+  }
+}
