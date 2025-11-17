@@ -32,6 +32,8 @@
                             <th>Password</th>
                             <th>Profile Picture</th>
                             <th></th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,7 +49,7 @@
                                     <% } %>
                                 </td>
                                 <td>
-                                    <form action="/editUser/<%= users[iCount].id %>" method="post">
+                                    <form action="/editUser/<%= users[iCount].id %>" method="get">
                                         <input type="submit" name="Edit" value="Edit" />
                                     </form>
                                 </td>

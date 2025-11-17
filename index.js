@@ -247,6 +247,103 @@ app.post("/deleteUser/:id", (req, res) => {
     })
 });
 
+app.get("/editUser/:id", (req, res) => {
+    const userId = req.params.id;
+    knex("users")
+        .where({ id: userId })
+        .first()
+        .then((user) => {
+            if (!user) {
+                return res.status(404).render("displayUsers", {
+                    users: [],
+                    error_message: "User not found."
+                });
+            }
+            res.render("editUser", { user, error_message: "" });
+        })
+        .catch((err) => {
+            console.error("Error fetching user:", err.message);
+            res.status(500).render("displayUsers", {
+                users: [],
+                error_message: "Unable to load user for editing."
+            });
+        });
+});
+
+app.post("/editUser/:id", upload.single("profileImage"), (req, res) => {
+    const userId = req.params.id;
+    const { username, password, existingImage } = req.body;
+    if (!username || !password) {
+        return knex("users")
+            .where({ id: userId })
+            .first()
+            .then((user) => {
+                if (!user) {
+                    return res.status(404).render("displayUsers", {
+                        users: [],
+                        error_message: "User not found."
+                    });
+                }
+                res.status(400).render("editUser", {
+                    user,
+                    error_message: "Username and password are required."
+                });
+            })
+            .catch((err) => {
+                console.error("Error fetching user:", err.message);
+                res.status(500).render("displayUsers", {
+                    users: [],
+                    error_message: "Unable to load user for editing."
+                });
+            });
+    }
+    const profileImagePath = req.file ? `/images/uploads/${req.file.filename}` : existingImage || null;
+
+    const updatedUser = {
+        username,
+        password,
+        profile_image: profileImagePath
+    };
+    
+    knex("users")
+        .where({ id: userId })
+        .update(updatedUser)
+        .then((rowsUpdated) => {
+            if (rowsUpdated === 0) {
+                return res.status(404).render("displayUsers", {
+                    users: [],
+                    error_message: "User not found."
+                });
+            }
+            res.redirect("/users");
+        })
+        .catch((err) => {
+            console.error("Error updating user:", err.message);
+            knex("users")
+                .where({ id: userId })
+                .first()
+                .then((user) => {
+                    if (!user) {
+                        return res.status(404).render("displayUsers", {
+                            users: [],
+                            error_message: "User not found."
+                        });
+                    }
+                    res.status(500).render("editUser", {
+                        user,
+                        error_message: "Unable to update user. Please try again."
+                    });
+                })
+                .catch((fetchErr) => {
+                    console.error("Error fetching user after update failure:", fetchErr.message);
+                    res.status(500).render("displayUsers", {
+                        users: [],
+                        error_message: "Unable to update user."
+                    });
+                });
+        });
+});
+
 app.listen(port, () => {
     console.log("The server is listening");
 });
