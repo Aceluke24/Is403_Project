@@ -1,10 +1,14 @@
-const knex = require('./db'); // make sure this points to your Knex instance
+// insertUsers.js
+
+const knexConfig = require("./knexfile");
+const environment = process.env.NODE_ENV || "development";
+const knex = require("knex")(knexConfig[environment]);
 
 async function insertUsers() {
   try {
     await knex('users').insert([
-      { id: 2, first_name: 'winnie', last_name: 'the pooh', profile_image: null },
-      { id: 1, first_name: 'luke', last_name: 'admin', profile_image: '/images/uploads/watson-0840.jpeg' }
+      { username: 'winnie', password: 'thepooh', profile_image: null },
+      { username: 'luke', password: 'admin', profile_image: '/images/uploads/watson-0840.jpeg' }
     ]);
     console.log('Users inserted successfully!');
   } catch (err) {
