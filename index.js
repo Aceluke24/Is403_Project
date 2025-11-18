@@ -93,7 +93,9 @@ const knex = require("knex")({
         user : process.env.RDS_USER || "postgres",
         password : process.env.RDS_PASSWORD || "admin",
         database : process.env.RDS_NAME || "foodisus",
-        port : process.env.RDS_PORT || 5432  // PostgreSQL 16 typically uses port 5434
+        port : process.env.RDS_PORT || 5432,  // PostgreSQL 16 typically uses port 5434
+        //The new port
+        ssl: process.env.DB_SSL ? {rejectUnauthorized: false} : false
     }
 });
 
