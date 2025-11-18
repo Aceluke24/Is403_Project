@@ -1,4 +1,5 @@
 // knexfile.js
+require('dotenv').config();
 module.exports = {
   development: {
     client: 'pg',
@@ -22,7 +23,7 @@ module.exports = {
       password: process.env.RDS_PASSWORD,
       database: process.env.RDS_DB_NAME,
       port: process.env.RDS_PORT || 5432,
-      ssl: { rejectUnauthorized: false }
+      ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
     },
     migrations: {
       directory: './migrations'

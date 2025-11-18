@@ -86,7 +86,7 @@ app.use(
     )
 );
 
-const knexConfig = require("./knexfile")
+const knexConfig = require("./knexfile");
 const environment = process.env.NODE_ENV || "development";
 const knex = require("knex")(knexConfig[environment]);
 
