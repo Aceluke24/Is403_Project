@@ -1,13 +1,18 @@
+<<<<<<< HEAD
 //npm install dotenv - explain
 //npm install express-session - explain
 //create the .env file
 
 // Load environment variables from .env file into memory
 // Allows you to use process.env
+=======
+
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
 require('dotenv').config();
 
 const express = require("express");
 
+<<<<<<< HEAD
 //Needed for the session variable - Stored on the server to hold data
 const session = require("express-session");
 
@@ -16,10 +21,17 @@ let path = require("path");
 const multer = require("multer");
 
 // Allows you to read the body of incoming HTTP requests and makes that data available on req.body
+=======
+// Needed for the session variable
+const session = require("express-session");
+
+let path = require("path");
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
 let bodyParser = require("body-parser");
 
 let app = express();
 
+<<<<<<< HEAD
 // Use EJS for the web pages - requires a views folder and all files are .ejs
 app.set("view engine", "ejs");
 
@@ -102,10 +114,33 @@ const knex = require('knex')({
 // Tells Express how to read form data sent in the body of a request
 app.use(express.urlencoded({extended: true}));
 
+=======
+app.set("view engine", "ejs");
+
+// process.env.PORT is when you deploy and 3000 is for test
+const port = process.env.PORT || 3000;
+
+app.use(
+    session(
+        {
+        secret: process.env.SESSION_SECRET || 'fallback-secret-key',
+        resave: false,
+        saveUninitialized: false
+        }
+    )
+)
+
+app.use(express.urlencoded({extended: true}));
+
+
+
+
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
 // Global authentication middleware - runs on EVERY request
 app.use((req, res, next) => {
     // Skip authentication for login routes
     if (req.path === '/' || req.path === '/login' || req.path === '/logout') {
+<<<<<<< HEAD
         //continue with the request path
         return next();
     }
@@ -115,11 +150,24 @@ app.use((req, res, next) => {
         //notice no return because nothing below it
         next(); // User is logged in, continue
     } 
+=======
+        // continue with the request path
+        return next();
+    }
+
+    // Check if user is logged in for all other routes
+    if (req.session.isLoggedIn) {
+        // notice no return becasue nothing below it
+        next();
+    }
+    // User is logged in, continue
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
     else {
         res.render("login", { error_message: "Please log in to access this page" });
     }
 });
 
+<<<<<<< HEAD
 // Main page route - notice it checks if they have logged in
 app.get("/", (req, res) => {
     // Check if user is logged in
@@ -127,17 +175,30 @@ app.get("/", (req, res) => {
         res.render("index");
     } 
     else {
+=======
+
+// Main page route - notice it checks if they have logged in
+app.get("/", (req, res) => {
+    // Check if user is logged in
+    if (req.session.isLoggedIn) {
+        res.render("index");
+    } else {
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
         res.render("login", { error_message: "" });
     }
 });
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
 // This creates attributes in the session object to keep track of user and if they logged in
 app.post("/login", (req, res) => {
     let sName = req.body.username;
     let sPassword = req.body.password;
 
+<<<<<<< HEAD
     knex.select("username", "password")
     .from('users')
     .where("username", sName)
@@ -157,6 +218,16 @@ app.post("/login", (req, res) => {
       console.error("Login error:", err);
       res.render("login", { error_message: "Invalid login" });
     });
+=======
+    if ((sName == "Luke") && (sPassword == "admin")) {
+        // Set session variables
+        req.session.isLoggedIn = true;
+        req.session.username = sName;
+        res.redirect("/landing");
+    } else {
+        res.render("login", { error_message: "Invalid login" });
+    }
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
 });
 
 // Logout route
@@ -170,6 +241,7 @@ app.get("/logout", (req, res) => {
     });
 });
 
+<<<<<<< HEAD
 app.get("/test", (req, res) => {
     // Check if user is logged in
     if (req.session.isLoggedIn) {
@@ -349,3 +421,17 @@ app.post("/editUser/:id", upload.single("profileImage"), (req, res) => {
 app.listen(port, () => {
     console.log("The server is listening");
 });
+=======
+app.get("/t", (req, res) => {
+    res.render("test");
+});
+
+
+app.listen(port, () => {
+    console.log("The server is listening");
+});
+
+app.get("/landing", (req,res) => {
+    res.render("landing", {username: req.session.username});
+})
+>>>>>>> 8e1be332642c8909734cea30755aef8fc9f6d1ea
