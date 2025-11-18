@@ -86,9 +86,18 @@ app.use(
     )
 );
 
-const knexConfig = require("./knexfile");
-const environment = process.env.NODE_ENV || "development";
-const knex = require("knex")(knexConfig[environment]);
+const knex = require('knex')({
+    client: 'pg',
+    connection: {
+      host: process.env.RDS_HOSTNAME || "localhost",
+      user: process.env.RDS_USERNAME || "postgres",
+      password: process.env.RDS_PASSWORD || "admin",
+      database: process.env.RDS_DB_NAME || "users",
+      port: process.env.RDS_PORT || 5432,
+      ssl: process.env.DB_SSL ? { rejectUnauthorized: false } : false
+    }
+});
+
 
 // Tells Express how to read form data sent in the body of a request
 app.use(express.urlencoded({extended: true}));
